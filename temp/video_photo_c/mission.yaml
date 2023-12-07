@@ -1,0 +1,21 @@
+api_version: 3
+kind: Mission
+metadata:
+  uid: com.parrot.missions.samples.video_photo
+  name: video_photo
+  description: Send commands to take photos and start video recording.
+  version: "0.0.0"
+targets:
+  Anafi Ai:
+  Anafi Ai Simulator:
+services:
+  video_photo:
+    lang: c
+    depends:
+      - libairsdk
+      - libarsdk
+      - libarsdk-pbc
+      - libmsghub
+      - libpomp
+      - libprotobuf-c-base
+      - protobuf-c

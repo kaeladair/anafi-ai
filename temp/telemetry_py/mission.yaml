@@ -1,0 +1,13 @@
+api_version: 3
+kind: Mission
+metadata:
+  uid: com.parrot.missions.samples.telemetry_py
+  name: telemetry_py
+  description: telemetry python example mission
+  version: "0.0.0"
+targets:
+  Anafi Ai:
+  Anafi Ai Simulator:
+services:
+  example_telemetry:
+    lang: python

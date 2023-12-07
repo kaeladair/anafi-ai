@@ -1,0 +1,20 @@
+api_version: 3
+kind: Mission
+metadata:
+  uid: com.parrot.missions.samples.move
+  name: move
+  description: Move the drone along a certain trajectory without using a guidance mode.
+  version: "0.0.0"
+targets:
+  # Important: Make sure you understand the behaviour of this mission before run it on a physical drone.
+  # Anafi Ai:
+  Anafi Ai Simulator:
+services:
+  move_along:
+    lang: c++
+    depends:
+      - libairsdk
+      - libarsdk
+      - libarsdkctrl
+      - libarsdkgen
+      - libconfigreader
