@@ -39,10 +39,6 @@ ULOG_DECLARE_TAG(ULOG_TAG);
  * record a video and take a photo
  */
 enum VideoPhotoStateMachine {
-	WAITING_FOR_RECORDING_CONFIG = 0,
-	// RECORDING_CONFIG_DONE,
-	// RECORDING_STARTED,
-	// RECORDING_STOPPED,
 	PHOTO_CONFIG_DONE,
 	PHOTO_SHOOT_DONE,
 };
@@ -107,7 +103,7 @@ static void onReceived(airsdk::control::ControlInterface *control_interface,
 
 MissionController::MissionController(pomp::Loop &loop)
 	: mControlItf(loop),
-	  mVideoPhotoCurrentState(WAITING_FOR_RECORDING_CONFIG),
+	  mVideoPhotoCurrentState(PHOTO_CONFIG_DONE),
 	  hasAlreadyHovered(false)
 {
 }
