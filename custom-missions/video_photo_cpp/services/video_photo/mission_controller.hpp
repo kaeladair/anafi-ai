@@ -107,5 +107,5 @@ public:
 	void reactToEventStateConfigFieldNumber(arsdk::camera::Event *evt);
 	void reactInSmToCameraMode(arsdk::camera::CameraMode mode);
 	void reactInSmToEventPhoto(arsdk::camera::Event *evt);
-	void reactInSmToEventRecording(arsdk::camera::Event *evt);
+	// void reactInSmToEventRecording(arsdk::camera::Event *evt);
 };

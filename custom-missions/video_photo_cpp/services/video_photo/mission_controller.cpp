@@ -40,9 +40,9 @@ ULOG_DECLARE_TAG(ULOG_TAG);
  */
 enum VideoPhotoStateMachine {
 	WAITING_FOR_RECORDING_CONFIG = 0,
-	RECORDING_CONFIG_DONE,
-	RECORDING_STARTED,
-	RECORDING_STOPPED,
+	// RECORDING_CONFIG_DONE,
+	// RECORDING_STARTED,
+	// RECORDING_STOPPED,
 	PHOTO_CONFIG_DONE,
 	PHOTO_SHOOT_DONE,
 };
@@ -59,7 +59,7 @@ static void onConnected(bool success, void *userdata)
 	/* At the beginning of the mission, we start by sending the recording
 	 * configuration - mandatory before any recording. The current state is
 	 * updated consequently */
-	ctrlitf->setVideoPhotoCurrentState(RECORDING_CONFIG_DONE);
+	ctrlitf->setVideoPhotoCurrentState(PHOTO_CONFIG_DONE);
 	// ctrlitf->cmdFcamSetConfigRecording();
 }
 
@@ -552,9 +552,9 @@ int MissionController::onCmdReceived(const arsdk_cmd *cmd)
 		case arsdk::camera::Event::IdCase::kPhoto:
 			this->reactInSmToEventPhoto(&evt);
 			break;
-		case arsdk::camera::Event::IdCase::kRecording:
-			this->reactInSmToEventRecording(&evt);
-			break;
+		// case arsdk::camera::Event::IdCase::kRecording:
+		// 	this->reactInSmToEventRecording(&evt);
+		// 	break;
 		default:
 			break;
 		}
@@ -610,7 +610,7 @@ void MissionController::reactInSmToCameraMode(arsdk::camera::CameraMode mode)
 		// photo
 		this->mVideoPhotoCurrentState = PHOTO_SHOOT_DONE;
 		this->cmdFcamStartPhoto();
-	} else if ((mode == arsdk::camera::CameraMode::CAMERA_MODE_RECORDING)
+	} /* else if ((mode == arsdk::camera::CameraMode::CAMERA_MODE_RECORDING)
 		   && (this->mVideoPhotoCurrentState
 		       == RECORDING_CONFIG_DONE)) {
 		// if one has received from the drone that a recording config
@@ -619,7 +619,7 @@ void MissionController::reactInSmToCameraMode(arsdk::camera::CameraMode mode)
 		// start recording
 		this->mVideoPhotoCurrentState = RECORDING_STARTED;
 		this->cmdFcamStartRecording();
-	}
+	} */
 }
 
 void MissionController::reactInSmToEventPhoto(arsdk::camera::Event *evt)
@@ -632,24 +632,24 @@ void MissionController::reactInSmToEventPhoto(arsdk::camera::Event *evt)
 	}
 }
 
-void MissionController::reactInSmToEventRecording(arsdk::camera::Event *evt)
-{
-	if ((evt->recording().type()
-	     == arsdk::camera::RecordingEvent::RECORDING_EVENT_START)
-	    && (this->mVideoPhotoCurrentState == RECORDING_STARTED)) {
-		// if one has received from the drone that a video recording
-		// start command has been sent + the current state noticed that
-		// one has started a recording, then one asks to stop recording
-		this->mVideoPhotoCurrentState = RECORDING_STOPPED;
-		this->cmdFcamStopRecording();
-	} else if ((evt->recording().type()
-		    == arsdk::camera::RecordingEvent::RECORDING_EVENT_STOP)
-		   && (this->mVideoPhotoCurrentState == RECORDING_STOPPED)) {
-		// if one has received from the drone that a video recording
-		// stop command has been sent + the current state noticed that
-		// one has stopped the video recording, then one asks to set up
-		// photo config to switch to photo mode
-		this->mVideoPhotoCurrentState = PHOTO_CONFIG_DONE;
-		this->cmdFcamSetConfigPhoto();
-	}
-}
+// void MissionController::reactInSmToEventRecording(arsdk::camera::Event *evt)
+// {
+// 	if ((evt->recording().type()
+// 	     == arsdk::camera::RecordingEvent::RECORDING_EVENT_START)
+// 	    && (this->mVideoPhotoCurrentState == RECORDING_STARTED)) {
+// 		// if one has received from the drone that a video recording
+// 		// start command has been sent + the current state noticed that
+// 		// one has started a recording, then one asks to stop recording
+// 		this->mVideoPhotoCurrentState = RECORDING_STOPPED;
+// 		this->cmdFcamStopRecording();
+// 	} else if ((evt->recording().type()
+// 		    == arsdk::camera::RecordingEvent::RECORDING_EVENT_STOP)
+// 		   && (this->mVideoPhotoCurrentState == RECORDING_STOPPED)) {
+// 		// if one has received from the drone that a video recording
+// 		// stop command has been sent + the current state noticed that
+// 		// one has stopped the video recording, then one asks to set up
+// 		// photo config to switch to photo mode
+// 		this->mVideoPhotoCurrentState = PHOTO_CONFIG_DONE;
+// 		this->cmdFcamSetConfigPhoto();
+// 	}
+// }
