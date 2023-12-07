@@ -16,7 +16,10 @@ public:
     ~MissionController() = default;
 
     int start();
-    void setVideoPhotoCurrentState(int state);
+    void setVideoPhotoCurrentState(int state)
+	{
+		this->mVideoPhotoCurrentState = state;
+	}
 
     int cmdFcamStartPhoto();
     int cmdFcamSetConfigPhoto();
