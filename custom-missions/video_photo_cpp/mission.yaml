@@ -1,8 +1,8 @@
 api_version: 1
 kind: Mission
 metadata:
-  uid: com.parrot.missions.samples.video_photo
-  name: video_photo
+  uid: com.parrot.missions.samples.video_photo_cpp
+  name: video_photo_cpp
   description: Send commands to take photos and start video recording.
   version: "0.0.0"
   target_model_id: 091A
