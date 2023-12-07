@@ -59,8 +59,8 @@ static void onConnected(bool success, void *userdata)
 	/* At the beginning of the mission, we start by sending the recording
 	 * configuration - mandatory before any recording. The current state is
 	 * updated consequently */
-	ctrlitf->setVideoPhotoCurrentState(RECORDING_CONFIG_DONE);
-	ctrlitf->cmdFcamSetConfigRecording();
+	ctrlitf->setVideoPhotoCurrentState(PHOTO_CONFIG_DONE);
+	ctrlitf->cmdFcamSetConfigPhoto();
 }
 
 /**
