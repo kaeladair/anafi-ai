@@ -218,12 +218,6 @@ int MissionController::onCmdReceived(const arsdk_cmd *cmd)
 	arsdk_binary payload;
 	arsdk::camera::Event evt;
 
-	// The first state is supposed to be over. Otherwise, it means the
-	// controller is not connected since the config has not been set
-	if (this->mVideoPhotoCurrentState == WAITING_FOR_RECORDING_CONFIG) {
-		return -1;
-	}
-
 	if (cmd->id == ARSDK_ID_GENERIC_CUSTOM_EVT) {
 		// Decode the generic custom event
 		res = arsdk_cmd_dec_Generic_Custom_evt(
