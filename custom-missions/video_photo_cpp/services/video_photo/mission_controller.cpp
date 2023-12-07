@@ -192,133 +192,133 @@ int MissionController::cmdFcamStartPhoto()
 	return res;
 }
 
-// Example of how to implement a C++ protobuf message, whose role is to start
-// recording. And then send it as an arsdk command to the drone
-int MissionController::cmdFcamStartRecording()
-{
-	arsdk_binary payload;
-	arsdk_cmd pkt;
-	uint16_t service_id = msghub_utils_get_service_id(
-		arsdk__camera__command__descriptor.name);
+// // Example of how to implement a C++ protobuf message, whose role is to start
+// // recording. And then send it as an arsdk command to the drone
+// int MissionController::cmdFcamStartRecording()
+// {
+// 	arsdk_binary payload;
+// 	arsdk_cmd pkt;
+// 	uint16_t service_id = msghub_utils_get_service_id(
+// 		arsdk__camera__command__descriptor.name);
 
-	// Create a message and serialize it
-	arsdk::camera::Command cmd;
-	// Start_Recording command is a nested oneof of the message Command. So
-	// it has to be retrieved as an extension of arsdk::camera::Command to
-	// be sent within its packet
-	arsdk::camera::Command_StartRecording *cmd_start_recording =
-		cmd.mutable_start_recording();
-	if (!cmd.has_start_recording()) {
-		ULOGE("Error while start recording command creation");
-		return -1;
-	}
+// 	// Create a message and serialize it
+// 	arsdk::camera::Command cmd;
+// 	// Start_Recording command is a nested oneof of the message Command. So
+// 	// it has to be retrieved as an extension of arsdk::camera::Command to
+// 	// be sent within its packet
+// 	arsdk::camera::Command_StartRecording *cmd_start_recording =
+// 		cmd.mutable_start_recording();
+// 	if (!cmd.has_start_recording()) {
+// 		ULOGE("Error while start recording command creation");
+// 		return -1;
+// 	}
 
-	// The camera id involved in recording is the front camera, and has to
-	// be precised when sending the command
-	uint8_t cam_id = 0; // FCAM
-	cmd_start_recording->set_camera_id(cam_id);
-	if (cmd_start_recording->camera_id() != cam_id) {
-		ULOGE("set_camera_id bad allocation in start recording");
-		return -1;
-	}
-	uint16_t msg_num = cmd.id_case();
+// 	// The camera id involved in recording is the front camera, and has to
+// 	// be precised when sending the command
+// 	uint8_t cam_id = 0; // FCAM
+// 	cmd_start_recording->set_camera_id(cam_id);
+// 	if (cmd_start_recording->camera_id() != cam_id) {
+// 		ULOGE("set_camera_id bad allocation in start recording");
+// 		return -1;
+// 	}
+// 	uint16_t msg_num = cmd.id_case();
 
-	/* Allocate buffer for serialization, use internal one if possible */
-	size_t len = cmd.ByteSizeLong();
-	std::vector<uint8_t> v_data(len);
+// 	/* Allocate buffer for serialization, use internal one if possible */
+// 	size_t len = cmd.ByteSizeLong();
+// 	std::vector<uint8_t> v_data(len);
 
-	/* Serialize and send the message */
-	int res =
-		cmd.SerializeToArray(static_cast<void *>(v_data.data()), len) ?
-			0 :
-			-EIO;
-	if (res != 0) {
-		return res;
-	}
+// 	/* Serialize and send the message */
+// 	int res =
+// 		cmd.SerializeToArray(static_cast<void *>(v_data.data()), len) ?
+// 			0 :
+// 			-EIO;
+// 	if (res != 0) {
+// 		return res;
+// 	}
 
-	/* Prepare payload */
-	arsdk_cmd_init(&pkt);
-	payload.cdata = static_cast<void *>(v_data.data());
-	payload.len = len;
-	res = arsdk_cmd_enc_Generic_Custom_cmd(
-		&pkt, service_id, msg_num, &payload);
+// 	/* Prepare payload */
+// 	arsdk_cmd_init(&pkt);
+// 	payload.cdata = static_cast<void *>(v_data.data());
+// 	payload.len = len;
+// 	res = arsdk_cmd_enc_Generic_Custom_cmd(
+// 		&pkt, service_id, msg_num, &payload);
 
-	/* Failed to prepare event */
-	if (res != 0) {
-		arsdk_cmd_clear(&pkt);
-		return res;
-	}
+// 	/* Failed to prepare event */
+// 	if (res != 0) {
+// 		arsdk_cmd_clear(&pkt);
+// 		return res;
+// 	}
 
-	ULOGN("ControlItf send start recording");
-	mControlItf.send(&pkt);
+// 	ULOGN("ControlItf send start recording");
+// 	mControlItf.send(&pkt);
 
-	arsdk_cmd_clear(&pkt);
-	return res;
-}
+// 	arsdk_cmd_clear(&pkt);
+// 	return res;
+// }
 
 // Example of how to implement a C++ protobuf message, whose role is to stop
 // recording. And then send it as an arsdk command to the drone
-int MissionController::cmdFcamStopRecording()
-{
-	arsdk_binary payload;
-	arsdk_cmd pkt;
-	uint16_t service_id = msghub_utils_get_service_id(
-		arsdk__camera__command__descriptor.name);
+// int MissionController::cmdFcamStopRecording()
+// {
+// 	arsdk_binary payload;
+// 	arsdk_cmd pkt;
+// 	uint16_t service_id = msghub_utils_get_service_id(
+// 		arsdk__camera__command__descriptor.name);
 
-	// Create a message and serialize it
-	arsdk::camera::Command cmd;
-	// Stop_Recording command is a nested oneof of the message Command. So
-	// it has to be retrieved as an extension of arsdk::camera::Command to
-	// be sent within its packet
-	arsdk::camera::Command_StopRecording *cmd_stop_recording =
-		cmd.mutable_stop_recording();
-	if (!cmd.has_stop_recording()) {
-		ULOGE("Error while stop recording command creation");
-		return -1;
-	}
+// 	// Create a message and serialize it
+// 	arsdk::camera::Command cmd;
+// 	// Stop_Recording command is a nested oneof of the message Command. So
+// 	// it has to be retrieved as an extension of arsdk::camera::Command to
+// 	// be sent within its packet
+// 	arsdk::camera::Command_StopRecording *cmd_stop_recording =
+// 		cmd.mutable_stop_recording();
+// 	if (!cmd.has_stop_recording()) {
+// 		ULOGE("Error while stop recording command creation");
+// 		return -1;
+// 	}
 
-	// The camera id involved in recording is the front camera, and has to
-	// be precised when sending the command
-	uint8_t cam_id = 0; // FCAM
-	cmd_stop_recording->set_camera_id(cam_id);
-	if (cmd_stop_recording->camera_id() != cam_id) {
-		ULOGE("set_camera_id bad allocation in stop recording");
-		return -1;
-	}
-	uint16_t msg_num = cmd.id_case();
+// 	// The camera id involved in recording is the front camera, and has to
+// 	// be precised when sending the command
+// 	uint8_t cam_id = 0; // FCAM
+// 	cmd_stop_recording->set_camera_id(cam_id);
+// 	if (cmd_stop_recording->camera_id() != cam_id) {
+// 		ULOGE("set_camera_id bad allocation in stop recording");
+// 		return -1;
+// 	}
+// 	uint16_t msg_num = cmd.id_case();
 
-	/* Allocate buffer for serialization, use internal one if possible */
-	size_t len = cmd.ByteSizeLong();
-	std::vector<uint8_t> v_data(len);
+// 	/* Allocate buffer for serialization, use internal one if possible */
+// 	size_t len = cmd.ByteSizeLong();
+// 	std::vector<uint8_t> v_data(len);
 
-	/* Serialize and send the message */
-	int res =
-		cmd.SerializeToArray(static_cast<void *>(v_data.data()), len) ?
-			0 :
-			-EIO;
-	if (res != 0) {
-		return res;
-	}
+// 	/* Serialize and send the message */
+// 	int res =
+// 		cmd.SerializeToArray(static_cast<void *>(v_data.data()), len) ?
+// 			0 :
+// 			-EIO;
+// 	if (res != 0) {
+// 		return res;
+// 	}
 
-	/* Prepare payload */
-	arsdk_cmd_init(&pkt);
-	payload.cdata = static_cast<void *>(v_data.data());
-	payload.len = len;
-	res = arsdk_cmd_enc_Generic_Custom_cmd(
-		&pkt, service_id, msg_num, &payload);
+// 	/* Prepare payload */
+// 	arsdk_cmd_init(&pkt);
+// 	payload.cdata = static_cast<void *>(v_data.data());
+// 	payload.len = len;
+// 	res = arsdk_cmd_enc_Generic_Custom_cmd(
+// 		&pkt, service_id, msg_num, &payload);
 
-	/* Failed to prepare event */
-	if (res != 0) {
-		arsdk_cmd_clear(&pkt);
-		return res;
-	}
+// 	/* Failed to prepare event */
+// 	if (res != 0) {
+// 		arsdk_cmd_clear(&pkt);
+// 		return res;
+// 	}
 
-	ULOGN("ControlItf send stop recording");
-	mControlItf.send(&pkt);
+// 	ULOGN("ControlItf send stop recording");
+// 	mControlItf.send(&pkt);
 
-	arsdk_cmd_clear(&pkt);
-	return res;
-}
+// 	arsdk_cmd_clear(&pkt);
+// 	return res;
+// }
 
 // Example of how to implement a C++ protobuf message, whose role is to set
 // config to photo. This command is mandatory: it is not possible to take a
@@ -424,90 +424,90 @@ int MissionController::cmdFcamSetConfigPhoto()
 // config to recording. This command is mandatory: it is not possible to start a
 // recording if the mode is not set to `recording`. Then send it as an arsdk
 // command to the drone
-int MissionController::cmdFcamSetConfigRecording()
-{
-	arsdk_binary payload;
-	arsdk_cmd pkt;
-	uint16_t service_id = msghub_utils_get_service_id(
-		arsdk__camera__command__descriptor.name);
+// int MissionController::cmdFcamSetConfigRecording()
+// {
+// 	arsdk_binary payload;
+// 	arsdk_cmd pkt;
+// 	uint16_t service_id = msghub_utils_get_service_id(
+// 		arsdk__camera__command__descriptor.name);
 
-	// Create a message and serialize it
-	arsdk::camera::Command cmd;
-	// Command_Configure command is a nested oneof of the message Command.
-	// So it has to be retrieved as an extension of arsdk::camera::Command
-	// to be sent within its packet
-	arsdk::camera::Command_Configure *cmd_configure =
-		cmd.mutable_configure();
-	if (!cmd.has_configure()) {
-		ULOGE("Error while setting up recording command configure");
-		return -1;
-	}
+// 	// Create a message and serialize it
+// 	arsdk::camera::Command cmd;
+// 	// Command_Configure command is a nested oneof of the message Command.
+// 	// So it has to be retrieved as an extension of arsdk::camera::Command
+// 	// to be sent within its packet
+// 	arsdk::camera::Command_Configure *cmd_configure =
+// 		cmd.mutable_configure();
+// 	if (!cmd.has_configure()) {
+// 		ULOGE("Error while setting up recording command configure");
+// 		return -1;
+// 	}
 
-	// The camera id involved in recording is the front camera, and has to
-	// be precised when sending the command
-	uint8_t cam_id = 0; // FCAM
-	cmd_configure->set_camera_id(cam_id);
-	if (cmd_configure->camera_id() != cam_id) {
-		ULOGE("set_camera_id bad allocation in set config recording");
-		return -1;
-	}
-	uint16_t msg_num = cmd.id_case();
+// 	// The camera id involved in recording is the front camera, and has to
+// 	// be precised when sending the command
+// 	uint8_t cam_id = 0; // FCAM
+// 	cmd_configure->set_camera_id(cam_id);
+// 	if (cmd_configure->camera_id() != cam_id) {
+// 		ULOGE("set_camera_id bad allocation in set config recording");
+// 		return -1;
+// 	}
+// 	uint16_t msg_num = cmd.id_case();
 
-	// Config command is a nested oneof of the message Command_Configure. So
-	// it has to be retrieved as an extension of
-	// arsdk::camera::Command_Configure to be sent within its packet
-	arsdk::camera::Config *config = cmd_configure->mutable_config();
-	if (!cmd_configure->has_config()) {
-		ULOGE("Error while setting up recording config");
-		return -1;
-	}
-	// Config command is in charge of the camera mode. In that case, the
-	// camera mode is to record
-	config->set_camera_mode(
-		arsdk::camera::CameraMode::CAMERA_MODE_RECORDING);
-	if (config->camera_mode()
-	    != arsdk::camera::CameraMode::CAMERA_MODE_RECORDING) {
-		ULOGE("set_camera_mode failed in set config recording");
-		return -1;
-	}
-	// Notify that this field has been changed on purpose with a new value.
-	// Otherwise, it won't be taken into account. Setting a new value to a
-	// field, without marking it as a selected field, will be ignored
-	(*config->mutable_selected_fields())
-		[arsdk::camera::Config::kCameraModeFieldNumber] = {};
+// 	// Config command is a nested oneof of the message Command_Configure. So
+// 	// it has to be retrieved as an extension of
+// 	// arsdk::camera::Command_Configure to be sent within its packet
+// 	arsdk::camera::Config *config = cmd_configure->mutable_config();
+// 	if (!cmd_configure->has_config()) {
+// 		ULOGE("Error while setting up recording config");
+// 		return -1;
+// 	}
+// 	// Config command is in charge of the camera mode. In that case, the
+// 	// camera mode is to record
+// 	config->set_camera_mode(
+// 		arsdk::camera::CameraMode::CAMERA_MODE_RECORDING);
+// 	if (config->camera_mode()
+// 	    != arsdk::camera::CameraMode::CAMERA_MODE_RECORDING) {
+// 		ULOGE("set_camera_mode failed in set config recording");
+// 		return -1;
+// 	}
+// 	// Notify that this field has been changed on purpose with a new value.
+// 	// Otherwise, it won't be taken into account. Setting a new value to a
+// 	// field, without marking it as a selected field, will be ignored
+// 	(*config->mutable_selected_fields())
+// 		[arsdk::camera::Config::kCameraModeFieldNumber] = {};
 
-	/* Allocate buffer for serialization, use internal one if possible */
-	size_t len = cmd.ByteSizeLong();
-	std::vector<uint8_t> v_data(len);
+// 	/* Allocate buffer for serialization, use internal one if possible */
+// 	size_t len = cmd.ByteSizeLong();
+// 	std::vector<uint8_t> v_data(len);
 
-	/* Serialize and send the message */
-	int res =
-		cmd.SerializeToArray(static_cast<void *>(v_data.data()), len) ?
-			0 :
-			-EIO;
-	if (res != 0) {
-		return res;
-	}
+// 	/* Serialize and send the message */
+// 	int res =
+// 		cmd.SerializeToArray(static_cast<void *>(v_data.data()), len) ?
+// 			0 :
+// 			-EIO;
+// 	if (res != 0) {
+// 		return res;
+// 	}
 
-	/* Prepare payload */
-	arsdk_cmd_init(&pkt);
-	payload.cdata = static_cast<void *>(v_data.data());
-	payload.len = len;
-	res = arsdk_cmd_enc_Generic_Custom_cmd(
-		&pkt, service_id, msg_num, &payload);
+// 	/* Prepare payload */
+// 	arsdk_cmd_init(&pkt);
+// 	payload.cdata = static_cast<void *>(v_data.data());
+// 	payload.len = len;
+// 	res = arsdk_cmd_enc_Generic_Custom_cmd(
+// 		&pkt, service_id, msg_num, &payload);
 
-	/* Failed to prepare event */
-	if (res != 0) {
-		arsdk_cmd_clear(&pkt);
-		return res;
-	}
+// 	/* Failed to prepare event */
+// 	if (res != 0) {
+// 		arsdk_cmd_clear(&pkt);
+// 		return res;
+// 	}
 
-	ULOGN("ControlItf send set recording config");
-	mControlItf.send(&pkt);
+// 	ULOGN("ControlItf send set recording config");
+// 	mControlItf.send(&pkt);
 
-	arsdk_cmd_clear(&pkt);
-	return res;
-}
+// 	arsdk_cmd_clear(&pkt);
+// 	return res;
+// }
 
 int MissionController::onCmdReceived(const arsdk_cmd *cmd)
 {
@@ -610,15 +610,6 @@ void MissionController::reactInSmToCameraMode(arsdk::camera::CameraMode mode)
 		// photo
 		this->mVideoPhotoCurrentState = PHOTO_SHOOT_DONE;
 		this->cmdFcamStartPhoto();
-	} else if ((mode == arsdk::camera::CameraMode::CAMERA_MODE_RECORDING)
-		   && (this->mVideoPhotoCurrentState
-		       == RECORDING_CONFIG_DONE)) {
-		// if one has received from the drone that a recording config
-		// set up command has been sent + the current state noticed that
-		// one has sent a recording config set up, then one asks to
-		// start recording
-		this->mVideoPhotoCurrentState = RECORDING_STARTED;
-		this->cmdFcamStartRecording();
 	}
 }
 
@@ -635,14 +626,6 @@ void MissionController::reactInSmToEventPhoto(arsdk::camera::Event *evt)
 void MissionController::reactInSmToEventRecording(arsdk::camera::Event *evt)
 {
 	if ((evt->recording().type()
-	     == arsdk::camera::RecordingEvent::RECORDING_EVENT_START)
-	    && (this->mVideoPhotoCurrentState == RECORDING_STARTED)) {
-		// if one has received from the drone that a video recording
-		// start command has been sent + the current state noticed that
-		// one has started a recording, then one asks to stop recording
-		this->mVideoPhotoCurrentState = RECORDING_STOPPED;
-		this->cmdFcamStopRecording();
-	} else if ((evt->recording().type()
 		    == arsdk::camera::RecordingEvent::RECORDING_EVENT_STOP)
 		   && (this->mVideoPhotoCurrentState == RECORDING_STOPPED)) {
 		// if one has received from the drone that a video recording
