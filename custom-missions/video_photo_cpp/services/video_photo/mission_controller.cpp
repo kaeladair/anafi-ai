@@ -28,7 +28,7 @@ static void onConnected(bool success, void *userdata)
 	 * updated consequently */
 	ctrlitf->setVideoPhotoCurrentState(PHOTO_CONFIG_DONE);
 	ctrlitf->cmdFcamSetConfigPhoto();
-    ctrlitf->startTimer(5);  // Start a timer to take a photo every 5 seconds
+    ctrlitf->startTimer(10);  // Start a timer to take a photo every 5 seconds
 }
 
 /**
